@@ -24,6 +24,18 @@
                         <textarea name="description" id="description" class="form-control">{{ $project->description }}</textarea>
                     </div>
 
+                    <div class="form-group">
+                        <label for="type_id">Tipologia:</label>
+                        <select name="type_id" id="type_id" class="form-control">
+                            <option value="">Seleziona una tipologia</option>
+                            @foreach($types as $type)
+                                <option value="{{ $type->id }}" {{ old('type_id') == $type->id ? 'selected' : '' }}>
+                                    {{ $type->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Aggiorna progetto</button>
                 </form>
                 <a href="{{ route('admin.projects.index') }}" class="btn btn-secondary mt-2">Torna alla lista</a>

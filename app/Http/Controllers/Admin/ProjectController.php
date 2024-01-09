@@ -21,12 +21,14 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $project->load('type'); // Carica la relazione 'type'
         return view('admin.projects.show', compact('project'));
     }
 
     public function create()
     {
-        return view('admin.projects.create');
+        $types = Type::all();
+        return view('admin.projects.create', compact('types'));
     }
 
     /**
@@ -38,17 +40,19 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'image_path' => 'required|string',
             'description' => 'required|string',
+            'type_id' => 'nullable|exists:types,id', // Garantisceche type_id sia valido, se presente
         ]);
-
+    
         Project::create($request->all());
-
+    
         return redirect()->route('admin.projects.index')
-            ->with('success', 'progetto creato con successo');
+            ->with('success', 'Progetto creato con successo');
     }
 
     public function edit(Project $project)
     {
-        return view('admin.projects.edit', compact('project'));
+        $types = Type::all();
+        return view('admin.projects.edit', compact('project', 'types'));
     }
 
     public function update(Request $request, Project $project)
@@ -57,10 +61,11 @@ class ProjectController extends Controller
             'title' => 'required|string|max:255',
             'image_path' => 'required|string',
             'description' => 'required|string',
+            'type_id' => 'nullable|exists:types,id', // Grantisceche type_id sia valido, se presente
         ]);
-
+    
         $project->update($request->all());
-
+    
         return redirect()->route('admin.projects.index')
             ->with('success', 'Progetto aggiornato con successo');
     }
